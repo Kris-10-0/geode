@@ -75,6 +75,7 @@ import org.apache.geode.redis.internal.commands.executor.key.RestoreExecutor;
 import org.apache.geode.redis.internal.commands.executor.key.ScanExecutor;
 import org.apache.geode.redis.internal.commands.executor.key.TTLExecutor;
 import org.apache.geode.redis.internal.commands.executor.key.TypeExecutor;
+import org.apache.geode.redis.internal.commands.executor.list.LIndexExecutor;
 import org.apache.geode.redis.internal.commands.executor.list.LLenExecutor;
 import org.apache.geode.redis.internal.commands.executor.list.LPopExecutor;
 import org.apache.geode.redis.internal.commands.executor.list.LPushExecutor;
@@ -88,7 +89,6 @@ import org.apache.geode.redis.internal.commands.executor.server.COMMANDCommandEx
 import org.apache.geode.redis.internal.commands.executor.server.DBSizeExecutor;
 import org.apache.geode.redis.internal.commands.executor.server.FlushAllExecutor;
 import org.apache.geode.redis.internal.commands.executor.server.InfoExecutor;
-import org.apache.geode.redis.internal.commands.executor.server.LolWutExecutor;
 import org.apache.geode.redis.internal.commands.executor.server.SlowlogExecutor;
 import org.apache.geode.redis.internal.commands.executor.server.TimeExecutor;
 import org.apache.geode.redis.internal.commands.executor.set.SAddExecutor;
@@ -304,6 +304,7 @@ public enum RedisCommandType {
 
   /************** Lists *****************/
 
+  LINDEX(new LIndexExecutor(), SUPPORTED, new Parameter().exact(3).flags(READONLY)),
   LLEN(new LLenExecutor(), SUPPORTED, new Parameter().exact(2).flags(READONLY, FAST)),
   LPOP(new LPopExecutor(), SUPPORTED, new Parameter().exact(2).flags(WRITE, FAST)),
   LPUSH(new LPushExecutor(), SUPPORTED, new Parameter().min(3).flags(WRITE, DENYOOM, FAST)),
@@ -316,7 +317,12 @@ public enum RedisCommandType {
       .flags(ADMIN, RANDOM, LOADING, STALE)),
   INFO(new InfoExecutor(), SUPPORTED, new Parameter().min(1).max(2, ERROR_SYNTAX).firstKey(0)
       .flags(RANDOM, LOADING, STALE)),
-  LOLWUT(new LolWutExecutor(), SUPPORTED, new Parameter().min(1).firstKey(0).flags(READONLY, FAST)),
+
+
+  /** MAKE SURE TO UNCOMMMENTTTTTT */
+  // LOLWUT(new LolWutExecutor(), SUPPORTED, new Parameter().min(1).firstKey(0).flags(READONLY,
+  // FAST)),
+
 
 
   /********** Publish Subscribe **********/
