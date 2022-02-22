@@ -11,49 +11,26 @@
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
- *
  */
+package org.apache.geode.redis.internal.commands.executor.list;
 
-package org.apache.geode.redis.internal.data;
+import org.junit.ClassRule;
 
-import java.util.Collections;
-import java.util.List;
+import org.apache.geode.redis.NativeRedisClusterTestRule;
 
-import org.apache.geode.cache.Region;
+public class LRangeNativeRedisAcceptanceTest extends AbstractLRangeIntegrationTest {
 
-class NullRedisList extends RedisList {
+  @ClassRule
+  public static NativeRedisClusterTestRule redis = new NativeRedisClusterTestRule();
 
-  NullRedisList() {
-    super();
+  @Override
+  public int getPort() {
+    return redis.getExposedPorts().get(0);
   }
 
   @Override
-  public List<byte[]> lrange(int start, int stop) {
-    return Collections.emptyList();
+  public void flushAll() {
+    redis.flushAll();
   }
 
-  @Override
-  public boolean isNull() {
-    return true;
-  }
-
-  @Override
-  public long lpush(List<byte[]> elementsToAdd, Region<RedisKey, RedisData> region, RedisKey key) {
-    RedisList newList = new RedisList();
-    for (byte[] element : elementsToAdd) {
-      newList.elementPush(element);
-    }
-    region.create(key, newList);
-    return elementsToAdd.size();
-  }
-
-  @Override
-  public byte[] lpop(Region<RedisKey, RedisData> region, RedisKey key) {
-    return null;
-  }
-
-  @Override
-  public int llen() {
-    return 0;
-  }
 }
