@@ -15,9 +15,9 @@
 
 package org.apache.geode.redis.internal.data.delta;
 
-import static org.apache.geode.DataSerializer.readPrimitiveInt;
-import static org.apache.geode.internal.InternalDataSerializer.readArrayLength;
-import static org.apache.geode.redis.internal.data.delta.DeltaType.REMOVE_ELEMENTS_BY_INDEX;
+import org.apache.geode.DataSerializer;
+import org.apache.geode.internal.InternalDataSerializer;
+import org.apache.geode.redis.internal.data.AbstractRedisData;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -25,27 +25,27 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.geode.DataSerializer;
-import org.apache.geode.internal.InternalDataSerializer;
-import org.apache.geode.redis.internal.data.AbstractRedisData;
+import static org.apache.geode.DataSerializer.readPrimitiveInt;
+import static org.apache.geode.internal.InternalDataSerializer.readArrayLength;
+import static org.apache.geode.redis.internal.data.delta.DeltaType.REMOVE_ELEMENTS_BY_INDEX_REVERSE_ORDER;
 
-public class RemoveElementsByIndex implements DeltaInfo {
+public class RemoveElementsByIndexReverseOrder implements DeltaInfo {
   private final List<Integer> indexes;
 
   public void add(int index) {
     indexes.add(index);
   }
 
-  public RemoveElementsByIndex() {
+  public RemoveElementsByIndexReverseOrder() {
     this.indexes = new ArrayList<>();
   }
 
-  public RemoveElementsByIndex(List<Integer> indexes) {
+  public RemoveElementsByIndexReverseOrder(List<Integer> indexes) {
     this.indexes = indexes;
   }
 
   public void serializeTo(DataOutput out) throws IOException {
-    DataSerializer.writeEnum(REMOVE_ELEMENTS_BY_INDEX, out);
+    DataSerializer.writeEnum(REMOVE_ELEMENTS_BY_INDEX_REVERSE_ORDER, out);
     InternalDataSerializer.writeArrayLength(indexes.size(), out);
     for (int index : indexes) {
       DataSerializer.writePrimitiveInt(index, out);
@@ -59,6 +59,6 @@ public class RemoveElementsByIndex implements DeltaInfo {
       indexes.add(readPrimitiveInt(in));
       size--;
     }
-    redisData.applyRemoveElementsByIndex(indexes);
+    redisData.applyRemoveElementsByIndexReverseOrder(indexes);
   }
 }

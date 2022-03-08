@@ -603,6 +603,11 @@ public abstract class AbstractHitsMissesIntegrationTest implements RedisIntegrat
     runCommandAndAssertHitsAndMisses(LIST_KEY, k -> jedis.lrange(k, 0, 0));
   }
 
+  @Test
+  public void testLrem() {
+    runCommandAndAssertNoStatUpdates(LIST_KEY, k -> jedis.lrem(k, 1, "element"));
+  }
+
   /************* Helper Methods *************/
   private void runCommandAndAssertHitsAndMisses(String key, Consumer<String> command) {
     Map<String, String> info = RedisTestHelper.getInfo(jedis);
