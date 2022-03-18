@@ -42,7 +42,6 @@ import org.apache.geode.redis.internal.data.delta.AddByteArraysTail;
 import org.apache.geode.redis.internal.data.delta.InsertByteArray;
 import org.apache.geode.redis.internal.data.delta.RemoveElementsByIndex;
 import org.apache.geode.redis.internal.data.delta.ReplaceByteArrayAtOffset;
-import org.apache.geode.redis.internal.data.delta.RemoveElementsByIndexReverseOrder;
 
 public class RedisList extends AbstractRedisData {
   protected static final int REDIS_LIST_OVERHEAD = memoryOverhead(RedisList.class);
