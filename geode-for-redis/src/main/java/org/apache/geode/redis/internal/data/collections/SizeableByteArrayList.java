@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.ListIterator;
 
 import org.apache.geode.internal.size.Sizeable;
+import org.apache.geode.redis.internal.netty.Coder;
 
 public class SizeableByteArrayList extends LinkedList<byte[]> implements Sizeable {
   private static final int BYTE_ARRAY_LIST_OVERHEAD = memoryOverhead(SizeableByteArrayList.class);
@@ -54,6 +55,7 @@ public class SizeableByteArrayList extends LinkedList<byte[]> implements Sizeabl
 
     while (iterator.hasNext() && count != indexesRemoved.size()) {
       byte[] element = iterator.next();
+      String s = Coder.bytesToString(element);
       if (Arrays.equals(element, (byte[]) o)) {
         iterator.remove();
         memberOverhead -= calculateByteArrayOverhead(element);
@@ -112,6 +114,7 @@ public class SizeableByteArrayList extends LinkedList<byte[]> implements Sizeabl
     // Iterates only through the indexes to remove
     for (int i = firstIndexToRemove; i <= remove.get(remove.size() - 1); i++) {
       byte[] element = iterator.next();
+      String s = Coder.bytesToString(element);
       if (i == remove.get(removeIndex)) {
         iterator.remove();
         memberOverhead -= calculateByteArrayOverhead(element);

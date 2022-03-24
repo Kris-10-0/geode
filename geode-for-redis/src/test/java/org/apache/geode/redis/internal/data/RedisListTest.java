@@ -126,7 +126,7 @@ public class RedisListTest {
     byte[] element = new byte[] {1};
     RedisList list = createRedisListWithDuplicateElements();
 
-    list.lrem(2, element, region, null);
+    list.lrem(5, getMember(3), region, null);
 
     verify(region).put(any(), any());
     assertThat(list.hasDelta()).isFalse();
@@ -148,12 +148,28 @@ public class RedisListTest {
 
   private RedisList createRedisListWithDuplicateElements() {
     RedisList newList = new RedisList();
-    newList.elementPushHead(new byte[] {1});
-    newList.elementPushHead(new byte[] {2});
-    newList.elementPushHead(new byte[] {1});
-    newList.elementPushHead(new byte[] {1});
-    newList.elementPushHead(new byte[] {3});
+    newList.elementPushHead(getMember(3));
+    newList.elementPushHead(getMember(3));
+    newList.elementPushHead(getMember(9));
+    newList.elementPushHead(getMember(6));
+    newList.elementPushHead(getMember(1));
+    newList.elementPushHead(getMember(2));
+    newList.elementPushHead(getMember(3));
+    newList.elementPushHead(getMember(1));
+    newList.elementPushHead(getMember(6));
+    newList.elementPushHead(getMember(4));
+    newList.elementPushHead(getMember(6));
+    newList.elementPushHead(getMember(6));
+    newList.elementPushHead(getMember(3));
+    newList.elementPushHead(getMember(3));
+    newList.elementPushHead(getMember(3));
+    newList.elementPushHead(getMember(4));
     return newList;
+  }
+
+  private byte[] getMember(int num) {
+    String s = "Member_" + num;
+    return s.getBytes();
   }
 
   private RedisList createRedisList(int e1, int e2) {

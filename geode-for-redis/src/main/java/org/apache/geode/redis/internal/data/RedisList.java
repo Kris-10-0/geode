@@ -45,6 +45,7 @@ import org.apache.geode.redis.internal.data.delta.InsertByteArray;
 import org.apache.geode.redis.internal.data.delta.RemoveElementsByIndex;
 import org.apache.geode.redis.internal.data.delta.ReplaceByteArrayAtOffset;
 import org.apache.geode.redis.internal.eventing.BlockingCommandListener;
+import org.apache.geode.redis.internal.netty.Coder;
 import org.apache.geode.redis.internal.netty.ExecutionHandlerContext;
 import org.apache.geode.redis.internal.services.RegionProvider;
 
@@ -455,7 +456,17 @@ public class RedisList extends AbstractRedisData {
 
   @Override
   public String toString() {
-    return "RedisList{" + super.toString() + ", " + "size=" + elementList.size() + '}';
+    return "RedisList{" + super.toString() + ", " + "size=" + elementList.size() + '}' + "\nKRISTENLIST\n"
+        + print();
+  }
+
+  public String print() {
+    StringBuilder s = new StringBuilder();
+    for (byte[] element : elementList) {
+      s.append(Coder.bytesToString(element));
+      s.append(", ");
+    }
+    return s.toString();
   }
 
   @Override
