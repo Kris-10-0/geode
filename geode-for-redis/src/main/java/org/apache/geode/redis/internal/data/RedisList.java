@@ -241,7 +241,11 @@ public class RedisList extends AbstractRedisData {
     List<Integer> removedIndexes;
     byte newVersion;
     synchronized (this) {
+<<<<<<< Updated upstream
       removedIndexes = elementList.removeNElements(element, count);
+=======
+      removedIndexes = elementList.remove(element, count);
+>>>>>>> Stashed changes
       if (removedIndexes.isEmpty()) {
         return 0;
       }

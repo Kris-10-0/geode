@@ -222,6 +222,7 @@ Geode for Redis implements a subset of the full Redis command set.
 - SLOWLOG <sup>3</sup>  
 - SMEMBERS  
 - SMOVE
+- SORT
 - SPOP
 - SRANDMEMBER
 - SREM  

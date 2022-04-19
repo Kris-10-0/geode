@@ -150,6 +150,19 @@ public class StringBytesGlossary {
   @MakeImmutable
   public static final byte[] RESET = stringToBytes("RESET");
 
+  // Sort Executor
+  // Also contaians GET and LIMIT
+  @MakeImmutable
+  public static final byte[] ALPHA = stringToBytes("ALPHA");
+  @MakeImmutable
+  public static final byte[] ASC = stringToBytes("ASC");
+  @MakeImmutable
+  public static final byte[] BY = stringToBytes("BY");
+  @MakeImmutable
+  public static final byte[] DESC = stringToBytes("DESC");
+  @MakeImmutable
+  public static final byte[] STORE = stringToBytes("STORE");
+
   // ZAddExecutor and SetExecutor
   @MakeImmutable
   public static final byte[] NX = stringToBytes("NX");

@@ -99,6 +99,8 @@ public class RedisConstants {
       "WRONGPASS invalid username-password pair or user is disabled.";
   public static final String ERROR_AUTH_CALLED_WITHOUT_SECURITY_CONFIGURED =
       "ERR AUTH called without a Security Manager configured.";
+  public static final String ERROR_SORT_CLUSTER_MODE =
+          "ERR '%s' option of SORT denied in Cluster mode.";
   public static final String ERROR_KEY_REQUIRED_ZINTERSTORE =
       "ERR at least 1 input key is needed for zinterstore";
   public static final String ERROR_KEY_REQUIRED_ZUNIONSTORE =

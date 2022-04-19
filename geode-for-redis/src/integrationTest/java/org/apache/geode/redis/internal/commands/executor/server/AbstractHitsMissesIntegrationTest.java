@@ -32,6 +32,7 @@ import redis.clients.jedis.args.ListPosition;
 
 import org.apache.geode.redis.RedisIntegrationTest;
 import org.apache.geode.redis.RedisTestHelper;
+import redis.clients.jedis.params.SortingParams;
 
 public abstract class AbstractHitsMissesIntegrationTest implements RedisIntegrationTest {
 
@@ -142,6 +143,11 @@ public abstract class AbstractHitsMissesIntegrationTest implements RedisIntegrat
   public void testRestore() {
     byte[] data = jedis.dump(HASH_KEY);
     runCommandAndAssertNoStatUpdates("hash-2", k -> jedis.restore(k, 0L, data));
+  }
+
+  @Test
+  public void testSort() {
+    runCommandAndAssertHitsAndMisses(SET_KEY, k -> jedis.sort(k, new SortingParams().alpha()));
   }
 
   /************* String related commands *************/

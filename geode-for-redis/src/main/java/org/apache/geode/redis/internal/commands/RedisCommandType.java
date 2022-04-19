@@ -417,7 +417,8 @@ public enum RedisCommandType {
   RPOP(new RPopExecutor(), Category.LIST, SUPPORTED, new Parameter().exact(2).flags(WRITE, FAST)),
   RPOPLPUSH(new RPopLPushExecutor(), Category.LIST, SUPPORTED,
       new Parameter().exact(3).lastKey(2).flags(WRITE, DENYOOM)),
-
+  SORT(new SortExecutor(), Category.LIST, SUPPORTED,
+          new Parameter().min(2).flags(WRITE, DENYOOM, MOVABLEKEYS)),
   /********** Publish Subscribe **********/
 
   SUBSCRIBE(new SubscribeExecutor(), Category.PUBSUB, SUPPORTED,
