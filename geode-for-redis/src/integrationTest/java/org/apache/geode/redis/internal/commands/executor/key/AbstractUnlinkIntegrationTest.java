@@ -53,60 +53,28 @@ public abstract class AbstractUnlinkIntegrationTest implements RedisIntegrationT
     assertAtLeastNArgs(jedis, Protocol.Command.UNLINK, 1);
   }
 
-  @Test
-  public void testUnlink_unlinkingOneKey_removesKeyAndReturnsOne() {
-    String key1 = "firstKey";
-    jedis.set(key1, "value1");
-
-    Long unlinkedCount = jedis.unlink(key1);
-
-    assertThat(unlinkedCount).isEqualTo(1L);
-    assertThat(jedis.get(key1)).isNull();
-  }
 
   @Test
-  public void testUnlink_unlinkingNonexistentKey_returnsZero() {
-    assertThat(jedis.unlink("ceci nest pas un clavier")).isEqualTo(0L);
-  }
+  public void unlink_removesExistingKeys_returnsAmountOfKeysRemoved() {
+    assertThat(jedis.unlink("{tag1}nonExistentKey")).isEqualTo(0L);
 
-  @Test
-  public void testUnlink_unlinkingMultipleKeys_returnsCountOfOnlyUnlinkedKeys() {
     String key1 = "{tag1}firstKey";
     String key2 = "{tag1}secondKey";
     String key3 = "{tag1}thirdKey";
 
     jedis.set(key1, "value1");
-    jedis.set(key2, "value2");
+    assertThat(jedis.unlink(key1)).isEqualTo(1L);
+    assertThat(jedis.exists(key1)).isFalse();
 
+    jedis.set(key1, "value1");
+    jedis.sadd(key3, "value2.1", "value2.2", "value2.3");
     assertThat(jedis.unlink(key1, key2, key3)).isEqualTo(2L);
-    assertThat(jedis.get(key1)).isNull();
-    assertThat(jedis.get(key2)).isNull();
+    assertThat(jedis.exists(key1)).isFalse();
+    assertThat(jedis.exists(key3)).isFalse();
   }
 
   @Test
-  public void testConcurrentUnlink_differentClients() {
-    String keyBaseName = "UNLINKBASE";
-
-    int ITERATION_COUNT = 4000;
-    new ConcurrentLoopingThreads(ITERATION_COUNT,
-        (i) -> jedis.set(keyBaseName + i, "value" + i))
-            .run();
-
-    AtomicLong unlinkedCount = new AtomicLong();
-    new ConcurrentLoopingThreads(ITERATION_COUNT,
-        (i) -> unlinkedCount.addAndGet(jedis.unlink(keyBaseName + i)),
-        (i) -> unlinkedCount.addAndGet(jedis.unlink(keyBaseName + i)))
-            .run();
-
-    assertThat(unlinkedCount.get()).isEqualTo(ITERATION_COUNT);
-
-    for (int i = 0; i < ITERATION_COUNT; i++) {
-      assertThat(jedis.get(keyBaseName + i)).isNull();
-    }
-  }
-
-  @Test
-  public void testUnlink_withBinaryKey() {
+  public void unlink_withBinaryKey() {
     byte[] key = new byte[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
 
     jedis.set(key, "foo".getBytes());
@@ -115,4 +83,29 @@ public abstract class AbstractUnlinkIntegrationTest implements RedisIntegrationT
     assertThat(jedis.get(key)).isNull();
   }
 
+  @Test
+  public void ensureListConsistency_whenRunningConcurrently() {
+    String key1 = "{tag1}key1";
+    String key2 = "{tag1}key2";
+
+    jedis.set(key1, "value1");
+    jedis.set(key2, "value2");
+
+    // Ensures for each key that only one key is
+    AtomicLong unlinkedCount = new AtomicLong();
+    new ConcurrentLoopingThreads(1000,
+        i -> unlinkedCount.set(jedis.unlink(key1, key2)),
+        i -> jedis.set(key2, "newValue"))
+            .runWithAction(() -> {
+              assertThat(unlinkedCount.get()).satisfiesAnyOf(
+                  count -> assertThat(count).isEqualTo(1L),
+                  count -> assertThat(count).isEqualTo(2L));
+              assertThat(jedis.exists(key1)).isFalse();
+              assertThat(jedis.get(key2)).satisfiesAnyOf(
+                  value -> assertThat(value).isNull(),
+                  value -> assertThat(value).isEqualTo("newValue"));
+              jedis.set(key1, "value1");
+              jedis.set(key2, "value2");
+            });
+  }
 }

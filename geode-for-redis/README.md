@@ -231,6 +231,7 @@ Geode for Redis implements a subset of the full Redis command set.
 - SUNIONSTORE
 - TTL  
 - TYPE  
+- UNLINK
 - UNSUBSCRIBE  
 - ZADD  
 - ZCARD  

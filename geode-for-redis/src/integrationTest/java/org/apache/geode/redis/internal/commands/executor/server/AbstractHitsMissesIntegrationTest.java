@@ -144,6 +144,11 @@ public abstract class AbstractHitsMissesIntegrationTest implements RedisIntegrat
     runCommandAndAssertNoStatUpdates("hash-2", k -> jedis.restore(k, 0L, data));
   }
 
+  @Test
+  public void testUnlink() {
+    runCommandAndAssertNoStatUpdates(STRING_KEY, k -> jedis.unlink(k));
+  }
+
   /************* String related commands *************/
   @Test
   public void testGet() {
@@ -539,11 +544,6 @@ public abstract class AbstractHitsMissesIntegrationTest implements RedisIntegrat
   @Test
   public void testScan() {
     runCommandAndAssertNoStatUpdates("", unused -> jedis.scan("0"));
-  }
-
-  @Test
-  public void testUnlink() {
-    runCommandAndAssertNoStatUpdates(STRING_KEY, k -> jedis.unlink(k));
   }
 
   /************* Bit related commands *************/

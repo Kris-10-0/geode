@@ -18,7 +18,6 @@ import static org.apache.geode.test.dunit.rules.RedisClusterStartupRule.BIND_ADD
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -151,7 +150,6 @@ public class LRemDUnitTest {
       String element = makeElementString(key, iterationCount);
       assertThat(jedis.lrem(key, count, element)).isEqualTo(COUNT_OF_UNIQUE_ELEMENT);
 
-      expectedList.removeAll(Collections.singleton(element));
       assertThat(jedis.lrange(key, 0, -1)).isEqualTo(expectedList);
       iterationCount++;
 

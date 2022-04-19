@@ -78,6 +78,7 @@ import org.apache.geode.redis.internal.commands.executor.key.RestoreExecutor;
 import org.apache.geode.redis.internal.commands.executor.key.ScanExecutor;
 import org.apache.geode.redis.internal.commands.executor.key.TTLExecutor;
 import org.apache.geode.redis.internal.commands.executor.key.TypeExecutor;
+import org.apache.geode.redis.internal.commands.executor.key.UnlinkExecutor;
 import org.apache.geode.redis.internal.commands.executor.list.BLPopExecutor;
 import org.apache.geode.redis.internal.commands.executor.list.LIndexExecutor;
 import org.apache.geode.redis.internal.commands.executor.list.LInsertExecutor;
@@ -235,7 +236,8 @@ public enum RedisCommandType {
       new Parameter().exact(2).flags(READONLY, RANDOM, FAST)),
   TYPE(new TypeExecutor(), Category.KEYSPACE, SUPPORTED,
       new Parameter().exact(2).flags(READONLY, FAST)),
-
+  UNLINK(new UnlinkExecutor(), Category.KEYSPACE, SUPPORTED,
+      new Parameter().min(2).lastKey(-1).flags(WRITE, FAST)),
   /************* Strings *****************/
 
   APPEND(new AppendExecutor(), Category.STRING, SUPPORTED,
@@ -458,8 +460,6 @@ public enum RedisCommandType {
       new Parameter().min(2).even(ERROR_SYNTAX).firstKey(0).flags(READONLY, RANDOM)),
   SELECT(new SelectExecutor(), Category.KEYSPACE, UNSUPPORTED,
       new Parameter().exact(2).firstKey(0).flags(LOADING, STALE, FAST)),
-  UNLINK(new DelExecutor(), Category.KEYSPACE, UNSUPPORTED,
-      new Parameter().min(2).lastKey(-1).flags(WRITE, FAST)),
 
   /************** Bitmap ****************/
 
